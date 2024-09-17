@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="OData.Domain" Alias="MappingService">
+            <EntityType Name="MappingAdvancedStat">
+                <Key>
+                    <PropertyRef Name="jobId"/>
+                </Key>
+                <Property Name="jobId" Type="Edm.String"/>
+                <Property Name="mappingStat" Type="MappingService.MSummaryStatDetails"/>
+                <Property Name="detailedStats" Type="MappingService.MDetailedStats"/>
+                <Property Name="summaryStats" Type="MappingService.MSrcTgtStats"/>
+            </EntityType>
+            <EntityType Name="MappingExecutionPlan">
+                <Key>
+                    <PropertyRef Name="jobId"/>
+                </Key>
+                <Property Name="jobId" Type="Edm.String"/>
+                <Property Name="scriptList" Type="Collection(MappingService.ScriptEntryStat)"/>
+            </EntityType>
+            <EntityType Name="MappingStat">
+                <Key>
+                    <PropertyRef Name="jobId"/>
+                </Key>
+                <Property Name="jobId" Type="Edm.String"/>
+                <Property Name="mappingDetails" Type="MappingService.MSummaryStatDetails"/>
+            </EntityType>
+            <EntityType Name="MappingExecutionStep">
+                <Key>
+                    <PropertyRef Name="jobId"/>
+                    <PropertyRef Name="fetchScripts"/>
+                </Key>
+                <Property Name="jobId" Type="Edm.String"/>
+                <Property Name="fetchScripts" Type="Edm.Boolean"/>
+                <Property Name="executionStepStats" Type="Collection(MappingService.MExecutionStepStat)"/>
+            </EntityType>
+            <ComplexType Name="MHiveScriptStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="hiveHistoryFile" Type="Edm.String"/>
+                <Property Name="hiveSessionFile" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MGroupStat">
+                <Property Name="processedBytes" Type="Edm.Int64"/>
+                <Property Name="processedRows" Type="Edm.Int64"/>
+                <Property Name="bytesThrougput" Type="Edm.Int64"/>
+                <Property Name="rowsThroughput" Type="Edm.Int64"/>
+                <Property Name="errorRows" Type="Edm.Int64"/>
+                <Property Name="errorBytes" Type="Edm.Int64"/>
+                <Property Name="groupName" Type="Edm.String"/>
+                <Property Name="firstRowTime" Type="Edm.Int64"/>
+            </ComplexType>
+            <ComplexType Name="MDetailedStats">
+                <Property Name="memoryData" Type="Collection(Edm.Int64)"/>
+                <Property Name="createdTime" Type="Collection(Edm.Int64)"/>
+                <Property Name="cpuData" Type="Collection(Edm.Int64)"/>
+                <Property Name="sourceTargetStats" Type="Collection(MappingService.TxInstanceStat)"/>
+                <Property Name="lastPurgeTime" Type="Edm.Int64"/>
+            </ComplexType>
+            <ComplexType Name="MNameValuePair">
+                <Property Name="name" Type="Edm.String"/>
+                <Property Name="value" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MExecutionStepStat">
+                <Property Name="endTime" Type="Edm.Int64"/>
+                <Property Name="startTime" Type="Edm.Int64"/>
+                <Property Name="errorCode" Type="Edm.String"/>
+                <Property Name="errorMessage" Type="Edm.String"/>
+                <Property Name="name" Type="Edm.String"/>
+                <Property Name="state" Type="Edm.String"/>
+                <Property Name="subExecutionStepStat" Type="Collection(MappingService.MExecutionStepStat)"/>
+            </ComplexType>
+            <ComplexType Name="MLocalMappingStepStat" BaseType="MappingService.MExecutionStepStat"/>
+            <ComplexType Name="MGridTaskStepStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="percentageCompletion" Type="Edm.Double"/>
+                <Property Name="webPageURL" Type="Edm.String"/>
+                <Property Name="incomingDependencies" Type="Edm.String"/>
+                <Property Name="outgoingDependencies" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="TxInstanceStat">
+                <Property Name="instanceName" Type="Edm.String"/>
+                <Property Name="isSource" Type="Edm.Boolean"/>
+                <Property Name="bytes" Type="Collection(Edm.Int64)"/>
+                <Property Name="rows" Type="Collection(Edm.Int64)"/>
+            </ComplexType>
+            <ComplexType Name="ScriptEntryStat">
+                <Property Name="name" Type="Edm.String"/>
+                <Property Name="content" Type="Edm.String"/>
+                <Property Name="depends" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MCommandTaskStat" BaseType="MappingService.MExecutionStepStat"/>
+            <ComplexType Name="MSrcTgtStats">
+                <Property Name="processStatSummary" Type="MappingService.MProcessStatSummary"/>
+                <Property Name="sourceTxStats" Type="Collection(MappingService.MSourceTxStat)"/>
+                <Property Name="targetTxStats" Type="Collection(MappingService.MTargetTxStat)"/>
+            </ComplexType>
+            <ComplexType Name="MTargetTxStat" BaseType="MappingService.AbstractTxStat"/>
+            <ComplexType Name="MSparkApplicationStepStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="jobTrackerUrl" Type="Edm.String"/>
+                <Property Name="query" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MHadoopTezJobStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="dagProgress" Type="Edm.Double"/>
+                <Property Name="hadoopJobPageUrl" Type="Edm.String"/>
+                <Property Name="hadoopOfficialTezJobId" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MSegmentStepStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="numOfFailedTasklets" Type="Edm.Int64"/>
+                <Property Name="numOfSucceededTasklets" Type="Edm.Int64"/>
+                <Property Name="numOfTasklets" Type="Edm.Int64"/>
+                <Property Name="percentageCompletion" Type="Edm.Double"/>
+                <Property Name="webPageURL" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MHiveQueryStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="hiveOfficalHiveQueryId" Type="Edm.String"/>
+                <Property Name="query" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MProcessStatSummary">
+                <Property Name="avgCpuUsage" Type="Edm.Double"/>
+                <Property Name="avgMemUsage" Type="Edm.Int64"/>
+            </ComplexType>
+            <ComplexType Name="AbstractTxStat">
+                <Property Name="instanceName" Type="Edm.String"/>
+                <Property Name="groupStats" Type="Collection(MappingService.MGroupStat)"/>
+            </ComplexType>
+            <ComplexType Name="MSummaryStatDetails">
+                <Property Name="status" Type="Edm.String"/>
+                <Property Name="mappingName" Type="Edm.String"/>
+                <Property Name="applicationName" Type="Edm.String"/>
+                <Property Name="serviceName" Type="Edm.String"/>
+                <Property Name="logFileName" Type="Edm.String"/>
+                <Property Name="startTime" Type="Edm.Int64"/>
+                <Property Name="endTime" Type="Edm.Int64"/>
+                <Property Name="executorType" Type="Edm.String"/>
+                <Property Name="executingNode" Type="Edm.String"/>
+                <Property Name="userName" Type="Edm.String"/>
+                <Property Name="securityDomain" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="MUserDefinedTaskStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="statsProperties" Type="Collection(MappingService.MNameValuePair)"/>
+            </ComplexType>
+            <ComplexType Name="MSourceTxStat" BaseType="MappingService.AbstractTxStat"/>
+            <ComplexType Name="MHadoopMapReduceJobStat" BaseType="MappingService.MExecutionStepStat">
+                <Property Name="hadoopJobPageUrl" Type="Edm.String"/>
+                <Property Name="hadoopOfficialMapReduceJobId" Type="Edm.String"/>
+                <Property Name="mapperProgress" Type="Edm.Double"/>
+                <Property Name="reducerProgress" Type="Edm.Double"/>
+            </ComplexType>
+            <EntityContainer Name="MSCONTAINER">
+                <EntitySet Name="MappingAdvancedStats" EntityType="MappingService.MappingAdvancedStat"/>
+                <EntitySet Name="MappingExecutionPlans" EntityType="MappingService.MappingExecutionPlan"/>
+                <EntitySet Name="MappingStats" EntityType="MappingService.MappingStat"/>
+                <EntitySet Name="MappingExecutionSteps" EntityType="MappingService.MappingExecutionStep"/>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
